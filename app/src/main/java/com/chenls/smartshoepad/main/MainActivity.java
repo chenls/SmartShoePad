@@ -24,9 +24,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.chenls.smartshoepad.R;
+import com.chenls.smartshoepad.setting.Choose;
 import com.chenls.smartshoepad.setting.Input;
+import com.chenls.smartshoepad.welcome.SetActivity;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 public class MainActivity extends Activity {
@@ -160,15 +163,37 @@ public class MainActivity extends Activity {
             /**
              * 获取数据
              */
+            double stepLength;
+            int w0 = Integer.parseInt(sharedPreferences.getString(SetActivity.SET_HEIGHT, "160"));
+            if (w0 < 150) {
+                stepLength = 0.4;
+            } else if (w0 < 160) {
+                stepLength = 0.5;
+            } else {
+                stepLength = 0.6;
+            }
+            int w1 = Integer.parseInt(sharedPreferences.getString(SetActivity.SET_WEIGHT, "50"));
+            int w2 = 80;
+            if (sharedPreferences.getString(Choose.GENDER, getString(R.string.male)).equals(getString(R.string.male))) {
+                w2 = 100;
+            }
+            double calorie_value;
+            int stepValue;
+            DecimalFormat df = new DecimalFormat("######0.000");
             if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
-                final String stepValue = intent.getStringExtra(UartService.EXTRA_DATA);
-                final String safeValue = intent.getStringExtra(UartService.SAFE_DATA);
-                if (!TextUtils.isEmpty(stepValue)) {
-//                    接受到CHAR4的数据
-                    step.setText("步数：" + stepValue);
-                    distance.setText("距离：" + stepValue);
-                    calorie.setText("卡路里：" + safeValue);
+                String s_Value = intent.getStringExtra(UartService.EXTRA_DATA);
+                if (TextUtils.isEmpty(s_Value)) {
+                    return;
                 }
+                stepValue = Integer.parseInt(s_Value);
+//              接受到CHAR4的计步数据
+                step.setText(getString(R.string.step) + "\n" + stepValue);
+                calorie_value = 3.330416666666667E-008D * w0 * w1 * w2 * stepValue;
+                calorie.setText(getString(R.string.calorie) + "\n" + df.format(calorie_value));
+                distance.setText(getString(R.string.distance) + "\n" + df.format(stepValue * stepLength));
+//              接受到CHAR4的安全数据
+                final String safeValue = intent.getStringExtra(UartService.SAFE_DATA);
+
                 //获取RSSI
                 final String rssiStatus = intent.getStringExtra(UartService.RSSI_STATUS);
                 if (!TextUtils.isEmpty(rssiStatus)) {

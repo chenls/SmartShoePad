@@ -99,6 +99,7 @@
             android:layout_marginBottom="-16.077dp"
             android:background="@drawable/red_shape"
             android:gravity="center"
+            android:text="@string/step"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
@@ -116,6 +117,7 @@
                 android:layout_height="120dp"
                 android:background="@drawable/blue_shape"
                 android:gravity="center"
+                android:text="@string/distance"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -125,6 +127,7 @@
                 android:layout_height="120dp"
                 android:background="@drawable/green_shape"
                 android:gravity="center"
+                android:text="@string/calorie"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>

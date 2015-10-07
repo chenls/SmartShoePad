@@ -13,9 +13,10 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.chenls.smartshoepad.main.CommonTools;
 import com.chenls.smartshoepad.R;
+import com.chenls.smartshoepad.main.CommonTools;
 import com.chenls.smartshoepad.main.SettingActivity;
+import com.chenls.smartshoepad.welcome.SetActivity;
 
 public class Input extends Activity {
     public static final String IS_NEED_PSD = "isNeedPSD";
@@ -23,9 +24,10 @@ public class Input extends Activity {
     public static final String MY_DATA = "myDate";
     public static final String NUM_PSD = "numPsd";
     public static final String CHANGE_NAME = "changName";
+    public static final String SET_HEIGHT = "setHeight";
+    public static final String SET_WEIGHT = "setWeight";
     private SharedPreferences sharedPreferences;
-    private boolean isChangeName;
-    private boolean isSurePSD;
+    private boolean isSurePSD, isSetHeight, isSetWeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,22 +48,29 @@ public class Input extends Activity {
         Intent intent = this.getIntent();        //获取已有的intent对象
         Bundle bundle = intent.getExtras();    //获取intent里面的bundle对象
         try {
-            isChangeName = bundle.getBoolean(SettingActivity.CHANGE_NAME);
+            isSurePSD = bundle.getBoolean(SettingActivity.SURE_PSD);
+            if (isSurePSD) {
+                ((TextView) findViewById(R.id.title)).setText(R.string.sure_psd);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (isChangeName) {
-            ((TextView) findViewById(R.id.title)).setText(getString(R.string.changeName));
-            ((EditText) findViewById(R.id.et_pwd)).setInputType(View.TEXT_ALIGNMENT_GRAVITY);
         }
 
         try {
-            isSurePSD = bundle.getBoolean(SettingActivity.SURE_PSD);
+            isSetHeight = bundle.getBoolean(SetActivity.SET_HEIGHT);
+            if (isSetHeight) {
+                ((TextView) findViewById(R.id.title)).setText(getString(R.string.set_height));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (isSurePSD) {
-            ((TextView) findViewById(R.id.title)).setText(R.string.sure_psd);
+        try {
+            isSetWeight = bundle.getBoolean(SetActivity.SET_WEIGHT);
+            if (isSetWeight) {
+                ((TextView) findViewById(R.id.title)).setText(getString(R.string.set_weight));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -82,13 +91,31 @@ public class Input extends Activity {
         EditText et_pwd;
         et_pwd = (EditText) findViewById(R.id.et_pwd);
         String value = et_pwd.getText().toString();
-
-        if (isChangeName) {
+        if (isSetWeight) {
             if (TextUtils.isEmpty(value)) {
                 CommonTools.showShortToast(this, getString(R.string.name_is_null));
             } else {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(SET_WEIGHT, value);
+                editor.commit();
                 Bundle b = new Bundle();
-                b.putString(CHANGE_NAME, value);
+                b.putString(SET_WEIGHT, value);
+                Intent result = new Intent();
+                result.putExtras(b);
+                setResult(Activity.RESULT_OK, result);
+                finish();
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+            return;
+        } else if (isSetHeight) {
+            if (TextUtils.isEmpty(value)) {
+                CommonTools.showShortToast(this, getString(R.string.name_is_null));
+            } else {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(SET_HEIGHT, value);
+                editor.commit();
+                Bundle b = new Bundle();
+                b.putString(SET_HEIGHT, value);
                 Intent result = new Intent();
                 result.putExtras(b);
                 setResult(Activity.RESULT_OK, result);

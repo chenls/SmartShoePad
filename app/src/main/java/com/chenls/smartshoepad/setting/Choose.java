@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.chenls.smartshoepad.R;
 import com.chenls.smartshoepad.main.SettingActivity;
+import com.chenls.smartshoepad.welcome.SetActivity;
 
 public class Choose extends Activity {
     public static final String NO_PSD = "0";
@@ -23,8 +24,9 @@ public class Choose extends Activity {
     public static final String YES = "yes";
     public static final String IS_AUTO_CONNECT = "isAutoConnect";
     public static final String IS_MANUAL_SET_NOT_AUTO_CONNECT = "isManual";
+    public static final String GENDER = "gender";
     private TextView title, isTrue, isFalse;
-    private boolean isAutoConnect;
+    private boolean isAutoConnect, isSetGender;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -52,14 +54,25 @@ public class Choose extends Activity {
         Bundle bundle = intent.getExtras();    //获取intent里面的bundle对象
         try {
             isAutoConnect = bundle.getBoolean(SettingActivity.AUTO_CONNECT);
+            if (isAutoConnect) {
+                title.setText(getString(R.string.autoConnect));
+                isTrue.setText(getString(R.string.yes));
+                isFalse.setText(getString(R.string.no));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (isAutoConnect) {
-            title.setText(getString(R.string.autoConnect));
-            isTrue.setText(getString(R.string.yes));
-            isFalse.setText(getString(R.string.no));
+        try {
+            isSetGender = bundle.getBoolean(SetActivity.SET_GENDER);
+            if (isSetGender) {
+                title.setText(getString(R.string.choose_gender));
+                isTrue.setText(getString(R.string.female));
+                isFalse.setText(getString(R.string.male));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public void titleImageButton(View view) {
@@ -71,6 +84,18 @@ public class Choose extends Activity {
 
         @Override
         public void onClick(View v) {
+            if (isSetGender) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                if (v == isTrue) {
+                    editor.putString(GENDER, getString(R.string.female));
+                    finishAndPutData(getString(R.string.female));
+                } else if (v == isFalse) {
+                    editor.putString(GENDER, getString(R.string.male));
+                    finishAndPutData(getString(R.string.male));
+                }
+                editor.commit();
+                return;
+            }
             if (isAutoConnect) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 if (v == isTrue) {

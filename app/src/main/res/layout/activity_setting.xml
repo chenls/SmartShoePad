@@ -19,42 +19,6 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/setPsd"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:clickable="true"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@mipmap/ic_arrow_right"
-                    android:gravity="center_vertical"
-                    android:padding="20dp"
-                    android:text="@string/setPsd"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/psd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/noPsd"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="0.3dp"
-                android:background="@color/line_gray" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
                     android:id="@+id/autoConnect"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,7 +54,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/changeName"
+                    android:id="@+id/personalSet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -99,7 +63,53 @@
                     android:drawableRight="@mipmap/ic_arrow_right"
                     android:gravity="center_vertical"
                     android:padding="20dp"
-                    android:text="@string/changeName"
+                    android:text="@string/personalSet"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.3dp"
+                android:background="@color/line_gray" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/safeSet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:clickable="true"
+                    android:drawablePadding="10dp"
+                    android:drawableRight="@mipmap/ic_arrow_right"
+                    android:gravity="center_vertical"
+                    android:padding="20dp"
+                    android:text="@string/safeSet"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.3dp"
+                android:background="@color/line_gray" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/fallSet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:clickable="true"
+                    android:drawablePadding="10dp"
+                    android:drawableRight="@mipmap/ic_arrow_right"
+                    android:gravity="center_vertical"
+                    android:padding="20dp"
+                    android:text="@string/fallSet"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 

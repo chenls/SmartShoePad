@@ -76,8 +76,10 @@
     <string name="title_activity_setting">SettingActivity</string>
     <string name="setPsd">设置密码</string>
     <string name="noPsd">无密码</string>
-    <string name="changeName">修改名称</string>
+    <string name="set_height">输入身高</string>
+    <string name="set_weight">输入体重</string>
     <string name="autoConnect">自动连接</string>
+    <string name="choose_gender">选择性别</string>
     <string name="title_activity_choose">Choose</string>
     <string name="title_activity_input">Input</string>
     <string name="numPsd">数字密码</string>
@@ -89,7 +91,7 @@
     <string name="PSD_is_less_than_four">密码需要4位到16位之间</string>
     <string name="yes">是</string>
     <string name="no">否</string>
-    <string name="name_is_null">名称不能为空！</string>
+    <string name="name_is_null">输入不能为空！</string>
     <string name="sure_psd">确认您现在的密码</string>
     <string name="psd_error">密码错误，请重试！</string>
     <string name="bt_disconnect">设备已断开</string>
@@ -104,8 +106,14 @@
     <string name="personalSet">个人设置</string>
     <string name="gender">性别</string>
     <string name="male">男</string>
+    <string name="female">女</string>
     <string name="height">身高</string>
     <string name="weight">体重</string>
+    <string name="safeSet">安全设置</string>
+    <string name="fallSet">跌倒设置</string>
+    <string name="step">步数</string>
+    <string name="distance">距离</string>
+    <string name="calorie">卡路里</string>
 
 
 </resources>
