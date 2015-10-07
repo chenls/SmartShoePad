@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.chenls.smartshoepad.R;
 import com.chenls.smartshoepad.setting.Choose;
 import com.chenls.smartshoepad.setting.Input;
+import com.chenls.smartshoepad.welcome.SetActivity;
 
 public class WelcomeActivity extends Activity {
     private static final String TAG = "SmartLock";
@@ -82,6 +83,11 @@ public class WelcomeActivity extends Activity {
                 }
             }
         }
+        //是否进入设置界面
+        if (!sharedPreferences.getBoolean("isSet", false)) {
+            Intent intent = new Intent(WelcomeActivity.this, SetActivity.class);
+            startActivity(intent);
+        }
     }
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
@@ -120,8 +126,11 @@ public class WelcomeActivity extends Activity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
         setContentView(R.layout.activity_welcome);
-
-
+        try {
+            sharedPreferences = this.getSharedPreferences(Input.MY_DATA,
+                    Context.MODE_PRIVATE);
+        } catch (Exception e) {
+        }
         connect_bluetooth = (Button) findViewById(R.id.connect_bluetooth);
         about_smart_lock = (Button) findViewById(R.id.about_smart_lock);
         animation = (TextView) findViewById(R.id.animation);
@@ -152,11 +161,6 @@ public class WelcomeActivity extends Activity {
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
-        try {
-            sharedPreferences = this.getSharedPreferences(Input.MY_DATA,
-                    Context.MODE_PRIVATE);
-        } catch (Exception e) {
-        }
         is_auto_connect = sharedPreferences.getBoolean(Choose.IS_AUTO_CONNECT, false);
         Intent intent = this.getIntent();        //获取已有的intent对象
         Bundle bundle = intent.getExtras();    //获取intent里面的bundle对象

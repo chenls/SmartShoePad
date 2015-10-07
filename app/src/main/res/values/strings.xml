@@ -100,6 +100,12 @@
     <string name="request_not_success">请求发送失败</string>
     <string name="bt_initialize_fail">蓝牙初始化失败</string>
     <string name="start">现在开始</string>
+    <string name="title_activity_set">SetActivity</string>
+    <string name="personalSet">个人设置</string>
+    <string name="gender">性别</string>
+    <string name="male">男</string>
+    <string name="height">身高</string>
+    <string name="weight">体重</string>
 
 
 </resources>

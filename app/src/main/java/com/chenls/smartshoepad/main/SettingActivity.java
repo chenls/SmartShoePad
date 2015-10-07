@@ -48,7 +48,6 @@ public class SettingActivity extends Activity {
                     Context.MODE_PRIVATE);
         } catch (Exception e) {
         }
-
     }
 
     @Override

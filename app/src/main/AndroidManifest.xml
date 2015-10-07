@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.Timetodo">
         <activity
-            android:name="com.chenls.smartshoepad.welcome.PageViewActivity"
+            android:name=".welcome.PageViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name">
             <intent-filter>
@@ -20,34 +20,39 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".main.WelcomeActivity" />
         <activity
-            android:name="com.chenls.smartshoepad.main.DeviceListActivity"
+            android:name=".main.DeviceListActivity"
             android:theme="@style/DialogLight" />
         <activity
-            android:name="com.chenls.smartshoepad.main.MainActivity"
+            android:name=".main.MainActivity"
             android:label="@string/title_activity_welcome" />
 
         <service
-            android:name="com.chenls.smartshoepad.main.UartService"
+            android:name=".main.UartService"
             android:enabled="true" />
 
         <activity
-            android:name="com.chenls.smartshoepad.main.SettingActivity"
+            android:name=".main.SettingActivity"
             android:label="@string/title_activity_setting"
             android:theme="@style/DialogLight" />
         <activity
-            android:name="com.chenls.smartshoepad.setting.Choose"
+            android:name=".setting.Choose"
             android:label="@string/title_activity_choose"
             android:theme="@style/DialogLight" />
         <activity
-            android:name="com.chenls.smartshoepad.setting.Input"
+            android:name=".setting.Input"
             android:label="@string/title_activity_input"
             android:theme="@style/DialogLight" />
         <activity
-            android:name="com.chenls.smartshoepad.main.AboutSLActivity"
+            android:name=".main.AboutSLActivity"
             android:label="@string/title_activity_about_sl"
+            android:theme="@style/DialogLight" />
+
+        <activity
+            android:name=".welcome.SetActivity"
+            android:label="@string/title_activity_set"
             android:theme="@style/DialogLight"></activity>
-        <activity android:name="com.chenls.smartshoepad.main.WelcomeActivity"></activity>
     </application>
 
 </manifest>
