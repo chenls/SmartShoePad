@@ -1,6 +1,7 @@
 package com.chenls.smartshoepad.main;
 
 import android.app.Activity;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -10,11 +11,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -22,7 +27,23 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.GeoPoint;
+import com.baidu.mapapi.LocationListener;
+import com.baidu.mapapi.MKAddrInfo;
+import com.baidu.mapapi.MKBusLineResult;
+import com.baidu.mapapi.MKDrivingRouteResult;
+import com.baidu.mapapi.MKEvent;
+import com.baidu.mapapi.MKGeneralListener;
+import com.baidu.mapapi.MKLocationManager;
+import com.baidu.mapapi.MKPoiResult;
+import com.baidu.mapapi.MKSearch;
+import com.baidu.mapapi.MKSearchListener;
+import com.baidu.mapapi.MKSuggestionResult;
+import com.baidu.mapapi.MKTransitRouteResult;
+import com.baidu.mapapi.MKWalkingRouteResult;
 import com.chenls.smartshoepad.R;
 import com.chenls.smartshoepad.setting.Choose;
 import com.chenls.smartshoepad.setting.Input;
@@ -30,6 +51,7 @@ import com.chenls.smartshoepad.welcome.SetActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends Activity {
@@ -47,6 +69,10 @@ public class MainActivity extends Activity {
     private SharedPreferences sharedPreferences;
     private String rssi;
     private boolean isManualDisconnect;
+
+    private BMapManager mapManager;
+    private MKLocationManager locationManager;
+    private Vibrator mVibrator01; // 声明一个振动器对象
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +219,22 @@ public class MainActivity extends Activity {
                 distance.setText(getString(R.string.distance) + "\n" + df.format(stepValue * stepLength));
 //              接受到CHAR4的安全数据
                 final String safeValue = intent.getStringExtra(UartService.SAFE_DATA);
+                if (safeValue.equals("1") || safeValue.equals("2")) {
+                    TimeCount time;
+                    time = new TimeCount(10000, 1000);// 构造CountDownTimer对象
+                    time.start(); // 开始启动10秒倒计时
+                    mapManager = new BMapManager(MainActivity.this); // 开始获取定位信息定位
+                    locationManager = mapManager
+                            .getLocationManager();
+                    mapManager
+                            .init("53351EE4BDE7BD870F41A0B4AF1480F1CA97DAF9",
+                                    new MyMKGeneralListener());
+                    locationManager.setNotifyInternal(20, 5);
+                    locationManager
+                            .requestLocationUpdates(new MyLocationListener());
+
+                    mapManager.start();
+                }
 
                 //获取RSSI
                 final String rssiStatus = intent.getStringExtra(UartService.RSSI_STATUS);
@@ -233,11 +275,121 @@ public class MainActivity extends Activity {
              * 接受设备不支持UART的广播
              */
             if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)) {
-//                CommonTools.showShortToast(MainActivity.this, getString(R.string.bt_initialize_fail));
-//                mService.disconnect();
             }
         }
     };
+
+
+    class TimeCount extends CountDownTimer {
+        public TimeCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);// 参数依次为总时长,和计时的时间间隔
+        }
+
+        @Override
+        public void onFinish() {// 计时完毕时触发
+            String keyValue = "1,10086,101";
+            // 开始发送短信
+            String[] key = keyValue.split(",");
+            SmsManager manager = SmsManager.getDefault();
+            ArrayList<String> texts = manager.divideMessage(key[2]
+                    + tv2);
+            try {
+                manager.sendMultipartTextMessage(key[1], null,
+                        texts, null, null);
+            } catch (Exception e) {
+            }
+            CommonTools.showShortToast(MainActivity.this, tv2);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {// 计时过程显示
+            mVibrator01 = (Vibrator) getApplication().getSystemService(
+                    Service.VIBRATOR_SERVICE);
+            mVibrator01.vibrate(new long[]{100, 10, 100, 1000}, -1);
+//            CommonTools.showShortToast(MainActivity.this, millisUntilFinished / 1000 + "秒");
+        }
+    }
+
+    // 定位自己的位置，只定位一次
+    public static String tv1, tv2;
+
+    class MyLocationListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location arg0) {
+//            double jingdu1 = arg0.getLatitude();
+//            double weidu1 = arg0.getLongitude();
+            int jingdu = (int) (arg0.getLatitude() * 1000000);
+            int weidu = (int) (arg0.getLongitude() * 1000000);
+//            tv1 = "经度：" + jingdu1 + ",纬度：" + weidu1;
+            MKSearch search = new MKSearch();
+            search.init(mapManager, new MyMKSearchListener());
+            search.reverseGeocode(new GeoPoint(jingdu, weidu));
+        }
+    }
+
+    // 供上一个函数调用
+    class MyMKSearchListener implements MKSearchListener {
+
+        @Override
+        public void onGetAddrResult(MKAddrInfo arg0, int arg1) {
+            if (arg0 == null) {
+                tv2 = "【自动获取数据】：没有获取想要的位置";
+            } else {
+                GeoPoint point = arg0.geoPt;
+                tv2 = ("【自动获取数据】："
+                        + "链接：http://api.map.baidu.com/geocoder?location="
+                        + (double) point.getLatitudeE6() / 1000000 + ","
+                        + (double) point.getLongitudeE6() / 1000000
+                        + "&output=html 地址：" + arg0.strAddr);
+            }
+        }
+
+        @Override
+        public void onGetDrivingRouteResult(MKDrivingRouteResult arg0, int arg1) {
+        }
+
+        @Override
+        public void onGetPoiResult(MKPoiResult arg0, int arg1, int arg2) {
+        }
+
+        @Override
+        public void onGetTransitRouteResult(MKTransitRouteResult arg0, int arg1) {
+        }
+
+        @Override
+        public void onGetWalkingRouteResult(MKWalkingRouteResult arg0, int arg1) {
+        }
+
+        @Override
+        public void onGetBusDetailResult(MKBusLineResult arg0, int arg1) {
+        }
+
+        @Override
+        public void onGetSuggestionResult(MKSuggestionResult arg0, int arg1) {
+        }
+    }
+
+    // 常用事件监听，用来处理通常的网络错误，授权验证错误等
+    class MyMKGeneralListener implements MKGeneralListener {
+
+        @Override
+        public void onGetNetworkState(int arg0) {
+            if (arg0 == MKEvent.ERROR_NETWORK_CONNECT)
+                Toast.makeText(MainActivity.this, "您的网络出错啦！", Toast.LENGTH_LONG)
+                        .show();
+        }
+
+        @Override
+        public void onGetPermissionState(int arg0) {
+
+            if (arg0 == MKEvent.ERROR_PERMISSION_DENIED) {
+                Toast.makeText(MainActivity.this, "API KEY 错误，请检查！",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
 
     Handler handler = new Handler();
     Runnable runnable = new Runnable() {
@@ -345,5 +497,8 @@ public class MainActivity extends Activity {
         unbindService(mServiceConnection);
         mService.stopSelf();
         mService = null;
+        if (mapManager != null) {
+            mapManager.destroy();
+        }
     }
 }
