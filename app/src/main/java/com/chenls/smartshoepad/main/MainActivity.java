@@ -25,9 +25,11 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.GeoPoint;
@@ -57,7 +59,8 @@ import java.util.Arrays;
 public class MainActivity extends Activity {
     private static final int REQUEST_CHANGE_NAME = 2;
     private int TIME = 2000;
-    private TextView step, distance, calorie, tv_bluetooth_name, tv_battery, tv_rssi;
+    private TextView step, distance, calorie, tv_bluetooth_name, tv_battery, tv_rssi, time, timeAnimation;
+    private RelativeLayout notTime;
     private Button connect, setting;
     private BluetoothDevice mDevice = null;
     private static final int UART_PROFILE_DISCONNECTED = 21;
@@ -69,10 +72,11 @@ public class MainActivity extends Activity {
     private SharedPreferences sharedPreferences;
     private String rssi;
     private boolean isManualDisconnect;
-
+    private Animation myAnimation_Scale;
     private BMapManager mapManager;
     private MKLocationManager locationManager;
     private Vibrator mVibrator01; // 声明一个振动器对象
+    private boolean wraing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +101,9 @@ public class MainActivity extends Activity {
         calorie = (TextView) findViewById(R.id.calorie);
         connect = (Button) findViewById(R.id.connect);
         setting = (Button) findViewById(R.id.setting);
+        time = (TextView) findViewById(R.id.time);
+        timeAnimation = (TextView) findViewById(R.id.timeAnimation);
+        notTime = (RelativeLayout) findViewById(R.id.notTime);
         connect.setOnClickListener(new OnClickListener());
         setting.setOnClickListener(new OnClickListener());
         handler.postDelayed(runnable, TIME); //每隔2s执行
@@ -220,6 +227,12 @@ public class MainActivity extends Activity {
 //              接受到CHAR4的安全数据
                 final String safeValue = intent.getStringExtra(UartService.SAFE_DATA);
                 if (safeValue.equals("1") || safeValue.equals("2")) {
+                    wraing = true;
+                    time.setVisibility(View.VISIBLE);
+                    timeAnimation.setVisibility(View.VISIBLE);
+                    notTime.setVisibility(View.GONE);
+                    myAnimation_Scale = AnimationUtils.loadAnimation(MainActivity.this, R.anim.my_scale_action);
+                    timeAnimation.startAnimation(myAnimation_Scale);
                     TimeCount time;
                     time = new TimeCount(10000, 1000);// 构造CountDownTimer对象
                     time.start(); // 开始启动10秒倒计时
@@ -279,7 +292,6 @@ public class MainActivity extends Activity {
         }
     };
 
-
     class TimeCount extends CountDownTimer {
         public TimeCount(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);// 参数依次为总时长,和计时的时间间隔
@@ -306,7 +318,7 @@ public class MainActivity extends Activity {
             mVibrator01 = (Vibrator) getApplication().getSystemService(
                     Service.VIBRATOR_SERVICE);
             mVibrator01.vibrate(new long[]{100, 10, 100, 1000}, -1);
-//            CommonTools.showShortToast(MainActivity.this, millisUntilFinished / 1000 + "秒");
+            time.setText("报警倒计时\n" + millisUntilFinished / 1000 + "秒");
         }
     }
 
@@ -334,7 +346,7 @@ public class MainActivity extends Activity {
         @Override
         public void onGetAddrResult(MKAddrInfo arg0, int arg1) {
             if (arg0 == null) {
-                tv2 = "【自动获取数据】：没有获取想要的位置";
+                tv2 = "【自动获取数据】：没有获取到想要的位置";
             } else {
                 GeoPoint point = arg0.geoPt;
                 tv2 = ("【自动获取数据】："
@@ -376,16 +388,14 @@ public class MainActivity extends Activity {
         @Override
         public void onGetNetworkState(int arg0) {
             if (arg0 == MKEvent.ERROR_NETWORK_CONNECT)
-                Toast.makeText(MainActivity.this, "您的网络出错啦！", Toast.LENGTH_LONG)
-                        .show();
+                CommonTools.showShortToast(MainActivity.this, "您的网络出错啦！");
         }
 
         @Override
         public void onGetPermissionState(int arg0) {
 
             if (arg0 == MKEvent.ERROR_PERMISSION_DENIED) {
-                Toast.makeText(MainActivity.this, "API KEY 错误，请检查！",
-                        Toast.LENGTH_LONG).show();
+                CommonTools.showShortToast(MainActivity.this, "API KEY 错误，请检查！");
             }
         }
 
@@ -400,6 +410,8 @@ public class MainActivity extends Activity {
                 handler.postDelayed(this, TIME);
                 //每两秒读取一次Rssi
                 mService.myReadRemoteRssi();
+                if (wraing)
+                    timeAnimation.startAnimation(myAnimation_Scale);
             } catch (Exception e) {
                 e.printStackTrace();
             }
