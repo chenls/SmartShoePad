@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.chenls.smartshoepad.R;
 import com.chenls.smartshoepad.main.SettingActivity;
+import com.chenls.smartshoepad.main.WarningSetActivity;
 import com.chenls.smartshoepad.welcome.SetActivity;
 
 public class Choose extends Activity {
@@ -26,7 +27,7 @@ public class Choose extends Activity {
     public static final String IS_MANUAL_SET_NOT_AUTO_CONNECT = "isManual";
     public static final String GENDER = "gender";
     private TextView title, isTrue, isFalse;
-    private boolean isAutoConnect, isSetGender;
+    private boolean isAutoConnect, isSetGender,isMySwitch;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -72,6 +73,16 @@ public class Choose extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            isMySwitch = bundle.getBoolean(WarningSetActivity.MY_SWITCH);
+            if (isMySwitch) {
+                title.setText(getString(R.string.mySwitch));
+                isTrue.setText(getString(R.string.close));
+                isFalse.setText(getString(R.string.open));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -84,6 +95,14 @@ public class Choose extends Activity {
 
         @Override
         public void onClick(View v) {
+            if (isMySwitch) {
+                if (v == isTrue) {
+                    finishAndPutData(getString(R.string.close));
+                } else if (v == isFalse) {
+                    finishAndPutData(getString(R.string.open));
+                }
+                return;
+            }
             if (isSetGender) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 if (v == isTrue) {

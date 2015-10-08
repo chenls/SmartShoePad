@@ -19,55 +19,25 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/personalSet"
+                    android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
                     android:clickable="true"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@mipmap/ic_arrow_right"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:padding="20dp"
-                    android:text="@string/personalSet"
+                    android:text="@string/safeSet"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
-            </RelativeLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="0.3dp"
-                android:background="@color/line_gray" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/autoConnect"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:clickable="true"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@mipmap/ic_arrow_right"
-                    android:gravity="center_vertical"
-                    android:padding="20dp"
-                    android:text="@string/autoConnect"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/isAutoConnect"
+                <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="40dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/isAutoConnect"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:layout_marginLeft="20dp"
+                    android:background="#00000000"
+                    android:clickable="true"
+                    android:onClick="titleImageButton"
+                    android:src="@mipmap/ic_arrow_left" />
             </RelativeLayout>
 
             <View
@@ -81,7 +51,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/safeSet"
+                    android:id="@+id/mySwitchSet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -90,12 +60,12 @@
                     android:drawableRight="@mipmap/ic_arrow_right"
                     android:gravity="center_vertical"
                     android:padding="20dp"
-                    android:text="@string/safeSwitch"
+                    android:text="@string/mySwitch"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/safe"
+                    android:id="@+id/mySwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -105,7 +75,6 @@
                     android:text="@string/close"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
-
             </RelativeLayout>
 
             <View
@@ -118,7 +87,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/fallSet"
+                    android:id="@+id/phoneSet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -127,22 +96,109 @@
                     android:drawableRight="@mipmap/ic_arrow_right"
                     android:gravity="center_vertical"
                     android:padding="20dp"
-                    android:text="@string/fallSwitch"
+                    android:text="@string/phone"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/fall"
+                    android:id="@+id/phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="40dp"
                     android:gravity="center_vertical"
-                    android:text="@string/close"
+                    android:text="@string/helpPhone"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.3dp"
+                android:background="@color/line_gray" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/messageSet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:clickable="true"
+                    android:drawablePadding="10dp"
+                    android:drawableRight="@mipmap/ic_arrow_right"
+                    android:gravity="center_vertical"
+                    android:padding="20dp"
+                    android:text="@string/message"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40dp"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="right"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@string/helpMessage"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.3dp"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="0.3dp"
+                android:background="@color/line_gray" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="13dp">
+
+                <Button
+                    android:id="@+id/cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_shape"
+                    android:onClick="titleImageButton"
+                    android:paddingBottom="9dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="9dp"
+                    android:text="@string/cancel"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
 
+                <Button
+                    android:id="@+id/sure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    android:layout_toRightOf="@id/cancel"
+                    android:background="@drawable/button_shape"
+                    android:onClick="sure"
+                    android:paddingBottom="9dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="9dp"
+                    android:text="@string/sure"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
             </RelativeLayout>
 
         </LinearLayout>

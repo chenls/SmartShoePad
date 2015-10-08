@@ -21,7 +21,11 @@ public class SettingActivity extends Activity {
     private static final int REQUEST_AUTO_CONNECT = 2;
     public static final String AUTO_CONNECT = "isAutoConnect";
     public static final String SURE_PSD = "surePSD";
-    private TextView personalSet, autoConnect, isAutoConnect;
+    public static final String SAFE_SET = "safeSet";
+    public static final String FALL_SET = "fallSet";
+    private static final int REQUEST_SAFE_SET = 3;
+    private static final int REQUEST_FALL_SET = 4;
+    private TextView personalSet, autoConnect, isAutoConnect, safeSet, safe, fallSet, fall;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -33,28 +37,39 @@ public class SettingActivity extends Activity {
         }
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_setting);
-
+        safeSet = (TextView) findViewById(R.id.safeSet);
+        safe = (TextView) findViewById(R.id.safe);
+        fallSet = (TextView) findViewById(R.id.fallSet);
+        fall = (TextView) findViewById(R.id.fall);
         personalSet = (TextView) findViewById(R.id.personalSet);
         autoConnect = (TextView) findViewById(R.id.autoConnect);
         isAutoConnect = (TextView) findViewById(R.id.isAutoConnect);
         personalSet.setOnClickListener(new OnClickListener());
         autoConnect.setOnClickListener(new OnClickListener());
+        safeSet.setOnClickListener(new OnClickListener());
+        fallSet.setOnClickListener(new OnClickListener());
         try {
             sharedPreferences = this.getSharedPreferences(Input.MY_DATA,
                     Context.MODE_PRIVATE);
         } catch (Exception e) {
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         if (sharedPreferences.getBoolean(Choose.IS_AUTO_CONNECT, false)) {
             isAutoConnect.setText(R.string.yes);
         } else {
             isAutoConnect.setText(R.string.no);
         }
 
+        if (sharedPreferences.getBoolean(WarningSetActivity.SAFE, false)) {
+            safe.setText(R.string.open);
+        } else {
+            safe.setText(R.string.close);
+        }
+
+        if (sharedPreferences.getBoolean(WarningSetActivity.FALL, false)) {
+            fall.setText(R.string.open);
+        } else {
+            fall.setText(R.string.close);
+        }
     }
 
     public class OnClickListener implements View.OnClickListener {
@@ -71,6 +86,20 @@ public class SettingActivity extends Activity {
                 bundle.putBoolean(AUTO_CONNECT, true);     // 标示是autoConnect 启动的新Activity
                 newIntent.putExtras(bundle);
                 startActivityForResult(newIntent, REQUEST_AUTO_CONNECT);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            } else if (v == safeSet) {
+                Intent newIntent = new Intent(SettingActivity.this, WarningSetActivity.class);
+                Bundle bundle = new Bundle(); //创建Bundle对象
+                bundle.putBoolean(SAFE_SET, true);     // 标示是autoConnect 启动的新Activity
+                newIntent.putExtras(bundle);
+                startActivityForResult(newIntent, REQUEST_SAFE_SET);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            } else if (v == fallSet) {
+                Intent newIntent = new Intent(SettingActivity.this, WarningSetActivity.class);
+                Bundle bundle = new Bundle(); //创建Bundle对象
+                bundle.putBoolean(FALL_SET, true);     // 标示是autoConnect 启动的新Activity
+                newIntent.putExtras(bundle);
+                startActivityForResult(newIntent, REQUEST_FALL_SET);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         }
@@ -89,6 +118,18 @@ public class SettingActivity extends Activity {
                     } else if ((Choose.YES).equals(result)) {
                         isAutoConnect.setText(getString(R.string.yes));
                     }
+                }
+                break;
+            case REQUEST_SAFE_SET:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    String result = data.getStringExtra(WarningSetActivity.RESULT);
+                    safe.setText(result);
+                }
+                break;
+            case REQUEST_FALL_SET:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    String result = data.getStringExtra(WarningSetActivity.RESULT);
+                    fall.setText(result);
                 }
                 break;
             default:

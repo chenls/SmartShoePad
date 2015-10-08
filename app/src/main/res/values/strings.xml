@@ -84,14 +84,14 @@
     <string name="title_activity_input">Input</string>
     <string name="numPsd">数字密码</string>
     <string name="title_activity_about_sl">AboutSLActivity</string>
-    <string name="about_sl">\t\t连接蓝牙后，就可以轻松地管理您家里的门锁了。（妈妈再也不担心，我没带钥匙了！）</string>
+    <string name="about_sl">\t\t“安全鞋垫”是由低功耗蓝牙芯片、加速度传感器、压力传感器、安卓手机客户端等组成的智能报警系统。主要有计步、安全报警、跌倒报警三大功能。\n\t\t①计步：连接BLE设备后，会自动获取计步信息，并根据使用者设置的个人信息计算消耗的卡路里。\n\t\t②安全报警：安全开关打开后，使用者遇到危险时，可以脚趾使劲按压鞋垫3秒钟触发报警，手机会自动获取位置和预设短信信息延时10秒后报警。同时手机产生震动提示使用者，此时使用者可选择取消报警。\n\t\t③跌倒报警：跌倒开关打开后，使用者跌倒时，手机会自动获取位置和预设短信信息延时10秒后报警。同时手机产生震动提示使用者，此时使用者可选择取消报警。</string>
     <string name="isAutoConnect">否</string>
     <string name="sure">确定</string>
     <string name="PSD_is_null">密码不能为空！</string>
     <string name="PSD_is_less_than_four">密码需要4位到16位之间</string>
     <string name="yes">是</string>
     <string name="no">否</string>
-    <string name="name_is_null">输入不能为空！</string>
+    <string name="input_is_null">输入不能为空！</string>
     <string name="sure_psd">确认您现在的密码</string>
     <string name="psd_error">密码错误，请重试！</string>
     <string name="bt_disconnect">设备已断开</string>
@@ -109,11 +109,20 @@
     <string name="female">女</string>
     <string name="height">身高</string>
     <string name="weight">体重</string>
-    <string name="safeSet">安全设置</string>
-    <string name="fallSet">跌倒设置</string>
+    <string name="safeSwitch">安全开关</string>
+    <string name="fallSwitch">跌倒开关</string>
     <string name="step">步数</string>
     <string name="distance">距离</string>
     <string name="calorie">卡路里</string>
-
+    <string name="close">关</string>
+    <string name="open">开</string>
+    <string name="title_activity_warning_set">WarningSetActivity</string>
+    <string name="safeSet">安全设置</string>
+    <string name="fallSet">跌倒设置</string>
+    <string name="mySwitch">开关</string>
+    <string name="phone">手机号码</string>
+    <string name="message">短信内容</string>
+    <string name="helpMessage">警察同志，我遇到了紧急情况！</string>
+    <string name="helpPhone">12110</string>
 
 </resources>

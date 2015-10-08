@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.chenls.smartshoepad.R;
 import com.chenls.smartshoepad.main.CommonTools;
 import com.chenls.smartshoepad.main.SettingActivity;
+import com.chenls.smartshoepad.main.WarningSetActivity;
 import com.chenls.smartshoepad.welcome.SetActivity;
 
 public class Input extends Activity {
@@ -23,11 +24,12 @@ public class Input extends Activity {
     public static final String PSD = "passWord";
     public static final String MY_DATA = "myDate";
     public static final String NUM_PSD = "numPsd";
-    public static final String CHANGE_NAME = "changName";
     public static final String SET_HEIGHT = "setHeight";
     public static final String SET_WEIGHT = "setWeight";
+    public static final String PHONE_SET = "phoneSet";
+    public static final String MESSAGE_SET = "messageSet";
     private SharedPreferences sharedPreferences;
-    private boolean isSurePSD, isSetHeight, isSetWeight;
+    private boolean isSurePSD, isSetHeight, isSetWeight, isPhoneSet, isMessageSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,23 @@ public class Input extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            isPhoneSet = bundle.getBoolean(WarningSetActivity.PHONE_SET);
+            if (isPhoneSet) {
+                ((TextView) findViewById(R.id.title)).setText(getString(R.string.phone));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            isMessageSet = bundle.getBoolean(WarningSetActivity.MESSAGE_SET);
+            if (isMessageSet) {
+                ((TextView) findViewById(R.id.title)).setText(getString(R.string.message));
+                ((EditText) findViewById(R.id.et_pwd)).setInputType(0x00000001);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void myFinish() {
@@ -91,70 +110,44 @@ public class Input extends Activity {
         EditText et_pwd;
         et_pwd = (EditText) findViewById(R.id.et_pwd);
         String value = et_pwd.getText().toString();
-        if (isSetWeight) {
-            if (TextUtils.isEmpty(value)) {
-                CommonTools.showShortToast(this, getString(R.string.name_is_null));
-            } else {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(SET_WEIGHT, value);
-                editor.commit();
-                Bundle b = new Bundle();
-                b.putString(SET_WEIGHT, value);
-                Intent result = new Intent();
-                result.putExtras(b);
-                setResult(Activity.RESULT_OK, result);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }
+        if (isPhoneSet) {
+            finishAndPutData(value, WarningSetActivity.RESULT);
+            return;
+        } else if (isMessageSet) {
+            finishAndPutData(value, WarningSetActivity.RESULT);
+            return;
+        } else if (isSetWeight) {
+            finishAndSaveData(value, SET_WEIGHT);
             return;
         } else if (isSetHeight) {
-            if (TextUtils.isEmpty(value)) {
-                CommonTools.showShortToast(this, getString(R.string.name_is_null));
-            } else {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(SET_HEIGHT, value);
-                editor.commit();
-                Bundle b = new Bundle();
-                b.putString(SET_HEIGHT, value);
-                Intent result = new Intent();
-                result.putExtras(b);
-                setResult(Activity.RESULT_OK, result);
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }
+            finishAndSaveData(value, SET_HEIGHT);
             return;
-        } else if (isSurePSD) {
-            if (!TextUtils.isEmpty(value)) {
-                String passWord = sharedPreferences.getString(Input.PSD, null);
-                if (value.equals(passWord)) {
-                    Intent newIntent = new Intent(Input.this, Choose.class);
-                    startActivity(newIntent);
-                    finish();
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                } else {
-                    et_pwd.setText("");
-                    CommonTools.showShortToast(Input.this, getString(R.string.psd_error));
-                }
-            } else {
-                CommonTools.showShortToast(Input.this, getString(R.string.PSD_is_null));
-            }
-        } else if (TextUtils.isEmpty(value)) {
-            CommonTools.showShortToast(this, getString(R.string.PSD_is_null));
-        } else if (value.length() < 4 || value.length() > 16) {
-            CommonTools.showShortToast(this, getString(R.string.PSD_is_less_than_four));
+        }
+
+    }
+
+    private void finishAndSaveData(String value, String setWeight) {
+        if (TextUtils.isEmpty(value)) {
+            CommonTools.showShortToast(this, getString(R.string.input_is_null));
         } else {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(IS_NEED_PSD, true);
-            editor.putString(PSD, value);
+            editor.putString(setWeight, value);
             editor.commit();
-
-            finishAndPutData(NUM_PSD);
+            myPutData(value, setWeight);
         }
     }
 
-    private void finishAndPutData(String changeName) {
+    private void finishAndPutData(String value, String messageSet) {
+        if (TextUtils.isEmpty(value)) {
+            CommonTools.showShortToast(this, getString(R.string.input_is_null));
+        } else {
+            myPutData(value, messageSet);
+        }
+    }
+
+    private void myPutData(String value, String messageSet) {
         Bundle b = new Bundle();
-        b.putBoolean(changeName, true);
+        b.putString(messageSet, value);
         Intent result = new Intent();
         result.putExtras(b);
         setResult(Activity.RESULT_OK, result);
