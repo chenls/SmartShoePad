@@ -72,28 +72,20 @@
     <string name="title_activity_my_phone_card">MyPhoneCardActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="input_psd">请输入密码</string>
     <string name="title_activity_setting">SettingActivity</string>
-    <string name="setPsd">设置密码</string>
-    <string name="noPsd">无密码</string>
     <string name="set_height">输入身高</string>
     <string name="set_weight">输入体重</string>
     <string name="autoConnect">自动连接</string>
     <string name="choose_gender">选择性别</string>
     <string name="title_activity_choose">Choose</string>
     <string name="title_activity_input">Input</string>
-    <string name="numPsd">数字密码</string>
-    <string name="title_activity_about_sl">AboutSLActivity</string>
+    <string name="title_activity_about_sl">AboutActivity</string>
     <string name="about_sl">\t\t“安全鞋垫”是由低功耗蓝牙芯片、加速度传感器、压力传感器、安卓手机客户端等组成的智能报警系统。主要有计步、安全报警、跌倒报警三大功能。\n\t\t①计步：连接BLE设备后，会自动获取计步信息，并根据使用者设置的个人信息计算消耗的卡路里。\n\t\t②安全报警：安全开关打开后，使用者遇到危险时，可以脚趾使劲按压鞋垫3秒钟触发报警，手机会自动获取位置和预设短信信息延时10秒后报警。同时手机产生震动提示使用者，此时使用者可选择取消报警。\n\t\t③跌倒报警：跌倒开关打开后，使用者跌倒时，手机会自动获取位置和预设短信信息延时10秒后报警。同时手机产生震动提示使用者，此时使用者可选择取消报警。</string>
     <string name="isAutoConnect">否</string>
     <string name="sure">确定</string>
-    <string name="PSD_is_null">密码不能为空！</string>
-    <string name="PSD_is_less_than_four">密码需要4位到16位之间</string>
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="input_is_null">输入不能为空！</string>
-    <string name="sure_psd">确认您现在的密码</string>
-    <string name="psd_error">密码错误，请重试！</string>
     <string name="bt_disconnect">设备已断开</string>
     <string name="not_found">未找到上次连接设备</string>
     <string name="auto_connect_not_success">自动连接设备未成功</string>
@@ -124,5 +116,16 @@
     <string name="message">短信内容</string>
     <string name="helpMessage">警察同志，我遇到了紧急情况！</string>
     <string name="helpPhone">12110</string>
+    <string name="fallWarning">跌倒报警</string>
+    <string name="safeWarning">安全报警</string>
+    <string name="messageHasSend">\n短信已发送</string>
+    <string name="countTime">倒计时\n</string>
+    <string name="second">秒</string>
+    <string name="baiduKey">53351EE4BDE7BD870F41A0B4AF1480F1CA97DAF9</string>
+    <string name="noPosition">【自动获取数据】：没有获取到想要的位置</string>
+    <string name="positionURL">【自动获取数据】：链接：http://api.map.baidu.com/geocoder?location=</string>
+    <string name="positionURL2"><![CDATA[&output=html 地址：]]></string>
+    <string name="networkError">您的网络出错啦！</string>
+    <string name="KEYError">API KEY 错误，请检查！</string>
 
 </resources>

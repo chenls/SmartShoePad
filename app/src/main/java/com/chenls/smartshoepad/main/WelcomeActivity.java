@@ -156,7 +156,7 @@ public class WelcomeActivity extends Activity {
         about_smart_lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent newIntent = new Intent(WelcomeActivity.this, AboutSLActivity.class);
+                Intent newIntent = new Intent(WelcomeActivity.this, AboutActivity.class);
                 startActivity(newIntent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }

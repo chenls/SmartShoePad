@@ -17,10 +17,7 @@ import com.chenls.smartshoepad.main.WarningSetActivity;
 import com.chenls.smartshoepad.welcome.SetActivity;
 
 public class Choose extends Activity {
-    public static final String NO_PSD = "0";
     public static final String CHOOSE_RESULT = "result";
-    private static final int REQUEST_NUM_PSD = 1;
-    public static final String NUM_PSD = "1";
     public static final String NO = "no";
     public static final String YES = "yes";
     public static final String IS_AUTO_CONNECT = "isAutoConnect";
@@ -129,17 +126,6 @@ public class Choose extends Activity {
                 editor.commit();
                 return;
             }
-            if (v == isTrue) {
-                Intent newIntent = new Intent(Choose.this, Input.class);
-                startActivityForResult(newIntent, REQUEST_NUM_PSD);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            } else if (v == isFalse) {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(Input.IS_NEED_PSD, false);
-                editor.putString(Input.PSD, null);
-                editor.commit();
-                finishAndPutData(NO_PSD);
-            }
         }
     }
 
@@ -151,20 +137,5 @@ public class Choose extends Activity {
         setResult(Activity.RESULT_OK, result);
         finish();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-
-            case REQUEST_NUM_PSD:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    boolean result = data.getBooleanExtra(Input.NUM_PSD, false);
-                    if (result) {
-                        finishAndPutData(NUM_PSD);
-                    }
-                }
-                break;
-        }
     }
 }

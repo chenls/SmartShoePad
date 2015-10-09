@@ -15,21 +15,17 @@ import android.widget.TextView;
 
 import com.chenls.smartshoepad.R;
 import com.chenls.smartshoepad.main.CommonTools;
-import com.chenls.smartshoepad.main.SettingActivity;
 import com.chenls.smartshoepad.main.WarningSetActivity;
 import com.chenls.smartshoepad.welcome.SetActivity;
 
 public class Input extends Activity {
-    public static final String IS_NEED_PSD = "isNeedPSD";
-    public static final String PSD = "passWord";
     public static final String MY_DATA = "myDate";
-    public static final String NUM_PSD = "numPsd";
     public static final String SET_HEIGHT = "setHeight";
     public static final String SET_WEIGHT = "setWeight";
     public static final String PHONE_SET = "phoneSet";
     public static final String MESSAGE_SET = "messageSet";
     private SharedPreferences sharedPreferences;
-    private boolean isSurePSD, isSetHeight, isSetWeight, isPhoneSet, isMessageSet;
+    private boolean  isSetHeight, isSetWeight, isPhoneSet, isMessageSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +45,7 @@ public class Input extends Activity {
         }
         Intent intent = this.getIntent();        //获取已有的intent对象
         Bundle bundle = intent.getExtras();    //获取intent里面的bundle对象
-        try {
-            isSurePSD = bundle.getBoolean(SettingActivity.SURE_PSD);
-            if (isSurePSD) {
-                ((TextView) findViewById(R.id.title)).setText(R.string.sure_psd);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
+                try {
             isSetHeight = bundle.getBoolean(SetActivity.SET_HEIGHT);
             if (isSetHeight) {
                 ((TextView) findViewById(R.id.title)).setText(getString(R.string.set_height));

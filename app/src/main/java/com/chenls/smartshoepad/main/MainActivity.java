@@ -21,7 +21,6 @@ import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -54,19 +53,17 @@ import com.chenls.smartshoepad.welcome.SetActivity;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends Activity {
     private static final int REQUEST_CHANGE_NAME = 2;
     private int TIME = 2000;
     private TextView step, distance, calorie, tv_bluetooth_name, tv_battery, tv_rssi, time, timeAnimation;
     private RelativeLayout notTime;
-    private Button connect, setting;
+    private Button connect, setting, cancelButton;
     private BluetoothDevice mDevice = null;
     private static final int UART_PROFILE_DISCONNECTED = 21;
     private int mState = UART_PROFILE_DISCONNECTED;
     private UartService mService = null;
-    public static final String TAG = "SmartLock";
     private String deviceAddress;
     private static final int UART_PROFILE_CONNECTED = 20;
     private SharedPreferences sharedPreferences;
@@ -76,7 +73,8 @@ public class MainActivity extends Activity {
     private BMapManager mapManager;
     private MKLocationManager locationManager;
     private Vibrator mVibrator01; // 声明一个振动器对象
-    private boolean wraing;
+    private boolean isSafe, isCancel, nowIsWarning;
+    private TimeCount timeCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,9 +99,11 @@ public class MainActivity extends Activity {
         calorie = (TextView) findViewById(R.id.calorie);
         connect = (Button) findViewById(R.id.connect);
         setting = (Button) findViewById(R.id.setting);
+        cancelButton = (Button) findViewById(R.id.cancelButton);
         time = (TextView) findViewById(R.id.time);
         timeAnimation = (TextView) findViewById(R.id.timeAnimation);
         notTime = (RelativeLayout) findViewById(R.id.notTime);
+        cancelButton.setOnClickListener(new OnClickListener());
         connect.setOnClickListener(new OnClickListener());
         setting.setOnClickListener(new OnClickListener());
         handler.postDelayed(runnable, TIME); //每隔2s执行
@@ -130,6 +130,16 @@ public class MainActivity extends Activity {
                 }
             } else if (v == setting) {
                 openSetting();
+            } else if (v == cancelButton) {
+                nowIsWarning = false;
+                isCancel = true;
+                timeCount.cancel();
+                //恢复正常计步
+                cancelButton.setVisibility(View.GONE);
+                time.setVisibility(View.GONE);
+                timeAnimation.clearAnimation();
+                timeAnimation.setVisibility(View.GONE);
+                notTime.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -145,7 +155,6 @@ public class MainActivity extends Activity {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
-
     /**
      * 发送字符串数据
      */
@@ -153,7 +162,6 @@ public class MainActivity extends Activity {
         byte[] value;
         try {
             value = message.getBytes("UTF-8");
-            Log.i(TAG, "发送数据为：" + Arrays.toString(value));
             mService.writeRXCharacteristic(value);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -164,7 +172,6 @@ public class MainActivity extends Activity {
      * 广播接收器
      */
     private final BroadcastReceiver UARTStatusChangeReceiver = new BroadcastReceiver() {
-
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             /**
@@ -184,11 +191,8 @@ public class MainActivity extends Activity {
                     return;
                 }
                 connect.setText(R.string.connect);
-                Log.i(TAG, "连接断开");
                 tv_bluetooth_name.setText(R.string.no_bt);
                 tv_battery.setText(getString(R.string.battery));
-//                step.setBackgroundResource(R.drawable.gray_circle_shape);
-//                step.setText(R.string.bt_disconnect);
                 tv_rssi.setText(R.string.rssi_null);
                 mService.connect(deviceAddress);
                 mState = UART_PROFILE_DISCONNECTED;
@@ -226,21 +230,36 @@ public class MainActivity extends Activity {
                 distance.setText(getString(R.string.distance) + "\n" + df.format(stepValue * stepLength));
 //              接受到CHAR4的安全数据
                 final String safeValue = intent.getStringExtra(UartService.SAFE_DATA);
+
                 if (safeValue.equals("1") || safeValue.equals("2")) {
-                    wraing = true;
+                    if (nowIsWarning) {
+                        return;
+                    }
+                    if (safeValue.equals("2")) {
+                        if (!sharedPreferences.getBoolean(WarningSetActivity.SAFE, false)) {
+                            return;
+                        }
+                        isSafe = true;
+                    }
+                    if (!sharedPreferences.getBoolean(WarningSetActivity.FALL, false)) {
+                        return;
+                    }
+                    nowIsWarning = true;
+                    isCancel = false;
+                    cancelButton.setText(getString(R.string.cancel));
+                    cancelButton.setVisibility(View.VISIBLE);
                     time.setVisibility(View.VISIBLE);
                     timeAnimation.setVisibility(View.VISIBLE);
                     notTime.setVisibility(View.GONE);
                     myAnimation_Scale = AnimationUtils.loadAnimation(MainActivity.this, R.anim.my_scale_action);
                     timeAnimation.startAnimation(myAnimation_Scale);
-                    TimeCount time;
-                    time = new TimeCount(10000, 1000);// 构造CountDownTimer对象
-                    time.start(); // 开始启动10秒倒计时
+                    timeCount = new TimeCount(10000, 1000);// 构造CountDownTimer对象
+                    timeCount.start(); // 开始启动10秒倒计时
                     mapManager = new BMapManager(MainActivity.this); // 开始获取定位信息定位
                     locationManager = mapManager
                             .getLocationManager();
                     mapManager
-                            .init("53351EE4BDE7BD870F41A0B4AF1480F1CA97DAF9",
+                            .init(getString(R.string.baiduKey),
                                     new MyMKGeneralListener());
                     locationManager.setNotifyInternal(20, 5);
                     locationManager
@@ -299,18 +318,24 @@ public class MainActivity extends Activity {
 
         @Override
         public void onFinish() {// 计时完毕时触发
-            String keyValue = "1,10086,101";
+
+            String key = WarningSetActivity.FALL;
+            String text = getString(R.string.fallWarning);
+            if (isSafe) {
+                key = WarningSetActivity.SAFE;
+                text = getString(R.string.safeWarning);
+            }
+            time.setText(text + getString(R.string.messageHasSend));
+            cancelButton.setText(getString(R.string.sure));
             // 开始发送短信
-            String[] key = keyValue.split(",");
             SmsManager manager = SmsManager.getDefault();
-            ArrayList<String> texts = manager.divideMessage(key[2]
+            ArrayList<String> texts = manager.divideMessage(sharedPreferences.getString(key + "Message", "")
                     + tv2);
             try {
-                manager.sendMultipartTextMessage(key[1], null,
-                        texts, null, null);
+                manager.sendMultipartTextMessage(sharedPreferences.getString(key + "Phone", "")
+                        , null, texts, null, null);
             } catch (Exception e) {
             }
-            CommonTools.showShortToast(MainActivity.this, tv2);
         }
 
         @Override
@@ -318,22 +343,23 @@ public class MainActivity extends Activity {
             mVibrator01 = (Vibrator) getApplication().getSystemService(
                     Service.VIBRATOR_SERVICE);
             mVibrator01.vibrate(new long[]{100, 10, 100, 1000}, -1);
-            time.setText("报警倒计时\n" + millisUntilFinished / 1000 + "秒");
+            String key = getString(R.string.fallWarning);
+            if (isSafe) {
+                key = getString(R.string.safeWarning);
+            }
+            time.setText(key + getString(R.string.countTime) + millisUntilFinished / 1000 + getString(R.string.second));
         }
     }
 
     // 定位自己的位置，只定位一次
-    public static String tv1, tv2;
+    public static String tv2;
 
     class MyLocationListener implements LocationListener {
 
         @Override
         public void onLocationChanged(Location arg0) {
-//            double jingdu1 = arg0.getLatitude();
-//            double weidu1 = arg0.getLongitude();
             int jingdu = (int) (arg0.getLatitude() * 1000000);
             int weidu = (int) (arg0.getLongitude() * 1000000);
-//            tv1 = "经度：" + jingdu1 + ",纬度：" + weidu1;
             MKSearch search = new MKSearch();
             search.init(mapManager, new MyMKSearchListener());
             search.reverseGeocode(new GeoPoint(jingdu, weidu));
@@ -346,14 +372,13 @@ public class MainActivity extends Activity {
         @Override
         public void onGetAddrResult(MKAddrInfo arg0, int arg1) {
             if (arg0 == null) {
-                tv2 = "【自动获取数据】：没有获取到想要的位置";
+                tv2 = getString(R.string.noPosition);
             } else {
                 GeoPoint point = arg0.geoPt;
-                tv2 = ("【自动获取数据】："
-                        + "链接：http://api.map.baidu.com/geocoder?location="
+                tv2 = (getString(R.string.positionURL)
                         + (double) point.getLatitudeE6() / 1000000 + ","
                         + (double) point.getLongitudeE6() / 1000000
-                        + "&output=html 地址：" + arg0.strAddr);
+                        + getString(R.string.positionURL2) + arg0.strAddr);
             }
         }
 
@@ -388,17 +413,16 @@ public class MainActivity extends Activity {
         @Override
         public void onGetNetworkState(int arg0) {
             if (arg0 == MKEvent.ERROR_NETWORK_CONNECT)
-                CommonTools.showShortToast(MainActivity.this, "您的网络出错啦！");
+                CommonTools.showShortToast(MainActivity.this, getString(R.string.networkError));
         }
 
         @Override
         public void onGetPermissionState(int arg0) {
 
             if (arg0 == MKEvent.ERROR_PERMISSION_DENIED) {
-                CommonTools.showShortToast(MainActivity.this, "API KEY 错误，请检查！");
+                CommonTools.showShortToast(MainActivity.this, getString(R.string.KEYError));
             }
         }
-
     }
 
     Handler handler = new Handler();
@@ -410,8 +434,12 @@ public class MainActivity extends Activity {
                 handler.postDelayed(this, TIME);
                 //每两秒读取一次Rssi
                 mService.myReadRemoteRssi();
-                if (wraing)
+                if (nowIsWarning) {
+                    if (isCancel) {
+                        return;
+                    }
                     timeAnimation.startAnimation(myAnimation_Scale);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -452,9 +480,7 @@ public class MainActivity extends Activity {
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder rawBinder) {
             mService = ((UartService.LocalBinder) rawBinder).getService();
-            Log.d(TAG, "onServiceConnected mService= " + mService);
             if (!mService.initialize()) {
-                Log.e(TAG, "Unable to initialize Bluetooth");
                 finish();
             } else {
                 //服务开启后 连接蓝牙
@@ -500,11 +526,9 @@ public class MainActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "Main_onDestroy()");
         try {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(UARTStatusChangeReceiver);
         } catch (Exception ignore) {
-            Log.e(TAG, ignore.toString());
         }
         unbindService(mServiceConnection);
         mService.stopSelf();

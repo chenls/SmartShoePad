@@ -171,6 +171,23 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/cancelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/time"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="50dp"
+                    android:background="@drawable/red_button_shape"
+                    android:paddingBottom="9dp"
+                    android:paddingLeft="60dp"
+                    android:paddingRight="60dp"
+                    android:paddingTop="9dp"
+                    android:text="@string/cancel"
+                    android:textColor="@color/red"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>

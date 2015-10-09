@@ -10,7 +10,7 @@ import android.view.WindowManager;
 
 import com.chenls.smartshoepad.R;
 
-public class AboutSLActivity extends Activity {
+public class AboutActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

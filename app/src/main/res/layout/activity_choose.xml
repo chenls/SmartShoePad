@@ -25,7 +25,6 @@
                     android:clickable="true"
                     android:gravity="center"
                     android:padding="20dp"
-                    android:text="@string/setPsd"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
@@ -57,7 +56,6 @@
                     android:clickable="true"
                     android:gravity="center_vertical"
                     android:padding="20dp"
-                    android:text="@string/noPsd"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
             </RelativeLayout>
@@ -79,7 +77,6 @@
                     android:clickable="true"
                     android:gravity="center_vertical"
                     android:padding="20dp"
-                    android:text="@string/numPsd"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
             </RelativeLayout>
