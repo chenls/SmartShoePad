@@ -22,7 +22,9 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
+import android.telephony.SmsMessage;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -80,6 +82,8 @@ public class MainActivity extends Activity {
     private Vibrator mVibrator01; // 声明一个振动器对象
     private boolean isSafe, isCancel, nowIsWarning;
     private TimeCount timeCount;
+    static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+    private String senderNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +121,65 @@ public class MainActivity extends Activity {
                     Context.MODE_PRIVATE);
         } catch (Exception e) {
         }
+        //动态注册广播消息
+        IntentFilter intentFilter = new IntentFilter(SMS_RECEIVED);
+        intentFilter.setPriority(1000);
+        registerReceiver(SMSBroadcastReceiver, intentFilter);
+    }
+
+    /**
+     * 短信监听
+     */
+    private BroadcastReceiver SMSBroadcastReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            SmsMessage msg;
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                Object[] pdusObj = (Object[]) bundle.get("pdus");
+                for (Object p : pdusObj) {
+                    msg = SmsMessage.createFromPdu((byte[]) p);
+                    String msgTxt = msg.getMessageBody();//得到消息的内容
+                    senderNumber = msg.getOriginatingAddress();
+                    Log.e("SMS", "发送人：" + senderNumber + "  短信内容：" + msgTxt);
+                    if (msgTxt.contains("address")) {
+                        ////取消广播
+                        abortBroadcast();
+                        //如果流量未开启，则开启数据流量
+                        toggleMobileData(MainActivity.this, true);
+                        //定位
+                        getPosition();
+                        //5秒后发送短信
+                        new Handler().postDelayed(new Runnable() {
+                            public void run() {
+                                // 延时5秒开始发送短信
+                                SmsManager manager = SmsManager.getDefault();
+                                ArrayList<String> texts = manager.divideMessage(tv2);
+                                try {
+                                    manager.sendMultipartTextMessage(senderNumber
+                                            , null, texts, null, null);
+                                } catch (Exception e) {
+                                }
+                            }
+                        }, 5000);
+                        return;
+                    }
+                }
+            }
+        }
+    };
+
+    private void getPosition() {
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                // 延时4秒开始定位
+                mapManager = new BMapManager(MainActivity.this); // 开始获取定位信息定位
+                locationManager = mapManager.getLocationManager();
+                mapManager.init(getString(R.string.baiduKey), new MyMKGeneralListener());
+                locationManager.setNotifyInternal(20, 5);
+                locationManager.requestLocationUpdates(new MyLocationListener());
+                mapManager.start();
+            }
+        }, 4000);
     }
 
     public class OnClickListener implements View.OnClickListener {
@@ -252,6 +315,8 @@ public class MainActivity extends Activity {
                     }
                     //如果流量未开启，则开启数据流量
                     toggleMobileData(MainActivity.this, true);
+                    //定位
+                    getPosition();
                     nowIsWarning = true;
                     isCancel = false;
                     cancelButton.setText(getString(R.string.cancel));
@@ -345,23 +410,11 @@ public class MainActivity extends Activity {
                 key = getString(R.string.safeWarning);
             }
             time.setText(key + getString(R.string.countTime) + millisUntilFinished / 1000 + getString(R.string.second));
-            if (millisUntilFinished / 1000 == 6) {
-                mapManager = new BMapManager(MainActivity.this); // 开始获取定位信息定位
-                locationManager = mapManager
-                        .getLocationManager();
-                mapManager
-                        .init(getString(R.string.baiduKey),
-                                new MyMKGeneralListener());
-                locationManager.setNotifyInternal(20, 5);
-                locationManager
-                        .requestLocationUpdates(new MyLocationListener());
-                mapManager.start();
-            }
         }
     }
 
     // 定位自己的位置，只定位一次
-    public static String tv2;
+    public static String tv2 = "";
 
     class MyLocationListener implements LocationListener {
 
@@ -535,6 +588,7 @@ public class MainActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(SMSBroadcastReceiver);
         try {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(UARTStatusChangeReceiver);
         } catch (Exception ignore) {
@@ -558,11 +612,11 @@ public class MainActivity extends Activity {
                 return;
             }
         }
-        Class<?> conMgrClass = null; // ConnectivityManager类
-        Field iConMgrField = null; // ConnectivityManager类中的字段
-        Object iConMgr = null; // IConnectivityManager类的引用
-        Class<?> iConMgrClass = null; // IConnectivityManager类
-        Method setMobileDataEnabledMethod = null; // setMobileDataEnabled方法
+        Class<?> conMgrClass; // ConnectivityManager类
+        Field iConMgrField; // ConnectivityManager类中的字段
+        Object iConMgr; // IConnectivityManager类的引用
+        Class<?> iConMgrClass; // IConnectivityManager类
+        Method setMobileDataEnabledMethod; // setMobileDataEnabled方法
         try {
             // 取得ConnectivityManager类
             conMgrClass = Class.forName(conMgr.getClass().getName());

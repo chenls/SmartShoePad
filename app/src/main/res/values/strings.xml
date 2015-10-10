@@ -122,8 +122,8 @@
     <string name="countTime">倒计时\n</string>
     <string name="second">秒</string>
     <string name="baiduKey">53351EE4BDE7BD870F41A0B4AF1480F1CA97DAF9</string>
-    <string name="noPosition">【自动获取数据】：没有获取到想要的位置</string>
-    <string name="positionURL">【自动获取数据】：链接：http://api.map.baidu.com/geocoder?location=</string>
+    <string name="noPosition">【自动获取数据】没有获取到想要的位置</string>
+    <string name="positionURL">【自动获取数据】链接：http://api.map.baidu.com/geocoder?location=</string>
     <string name="positionURL2"><![CDATA[&output=html 地址：]]></string>
     <string name="networkError">您的网络出错啦！</string>
     <string name="KEYError">API KEY 错误，请检查！</string>
