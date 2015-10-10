@@ -137,7 +137,6 @@ public class UartService extends Service {
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
             super.onReadRemoteRssi(gatt, rssi, status);
-            Log.e(TAG, "rssi" + rssi + "status" + status);
             final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
             intent.putExtra(RSSI, "" + rssi);
             intent.putExtra(RSSI_STATUS, "" + status);
@@ -285,14 +284,12 @@ public class UartService extends Service {
         if (mBluetoothManager == null) {
             mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             if (mBluetoothManager == null) {
-                Log.e(TAG, "Unable to initialize BluetoothManager.");
                 return false;
             }
         }
 
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         if (mBluetoothAdapter == null) {
-            Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
         }
 

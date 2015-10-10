@@ -24,7 +24,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -140,10 +139,9 @@ public class MainActivity extends Activity {
                     msg = SmsMessage.createFromPdu((byte[]) p);
                     String msgTxt = msg.getMessageBody();//得到消息的内容
                     senderNumber = msg.getOriginatingAddress();
-                    Log.e("SMS", "发送人：" + senderNumber + "  短信内容：" + msgTxt);
                     if (msgTxt.contains("address")) {
-                        ////取消广播
-                        abortBroadcast();
+//                    if (true) {
+                        CommonTools.showShortToast(MainActivity.this, "收到短信了");
                         //如果流量未开启，则开启数据流量
                         toggleMobileData(MainActivity.this, true);
                         //定位
