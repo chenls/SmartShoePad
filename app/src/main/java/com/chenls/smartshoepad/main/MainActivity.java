@@ -235,6 +235,7 @@ public class MainActivity extends Activity {
                     if (nowIsWarning) {
                         return;
                     }
+                    isSafe = false;
                     if (safeValue.equals("2")) {
                         if (!sharedPreferences.getBoolean(WarningSetActivity.SAFE, false)) {
                             return;
