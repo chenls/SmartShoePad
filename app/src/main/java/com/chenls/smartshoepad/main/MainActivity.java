@@ -345,7 +345,7 @@ public class MainActivity extends Activity {
                 key = getString(R.string.safeWarning);
             }
             time.setText(key + getString(R.string.countTime) + millisUntilFinished / 1000 + getString(R.string.second));
-            if (millisUntilFinished / 1000 == 9) {
+            if (millisUntilFinished / 1000 == 6) {
                 mapManager = new BMapManager(MainActivity.this); // 开始获取定位信息定位
                 locationManager = mapManager
                         .getLocationManager();
@@ -355,7 +355,6 @@ public class MainActivity extends Activity {
                 locationManager.setNotifyInternal(20, 5);
                 locationManager
                         .requestLocationUpdates(new MyLocationListener());
-
                 mapManager.start();
             }
         }
