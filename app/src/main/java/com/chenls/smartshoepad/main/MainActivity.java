@@ -12,6 +12,8 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -51,6 +53,9 @@ import com.chenls.smartshoepad.setting.Input;
 import com.chenls.smartshoepad.welcome.SetActivity;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -245,6 +250,8 @@ public class MainActivity extends Activity {
                     if (!sharedPreferences.getBoolean(WarningSetActivity.FALL, false)) {
                         return;
                     }
+                    //如果流量未开启，则开启数据流量
+                    toggleMobileData(MainActivity.this, true);
                     nowIsWarning = true;
                     isCancel = false;
                     cancelButton.setText(getString(R.string.cancel));
@@ -256,17 +263,6 @@ public class MainActivity extends Activity {
                     timeAnimation.startAnimation(myAnimation_Scale);
                     timeCount = new TimeCount(10000, 1000);// 构造CountDownTimer对象
                     timeCount.start(); // 开始启动10秒倒计时
-                    mapManager = new BMapManager(MainActivity.this); // 开始获取定位信息定位
-                    locationManager = mapManager
-                            .getLocationManager();
-                    mapManager
-                            .init(getString(R.string.baiduKey),
-                                    new MyMKGeneralListener());
-                    locationManager.setNotifyInternal(20, 5);
-                    locationManager
-                            .requestLocationUpdates(new MyLocationListener());
-
-                    mapManager.start();
                 }
 
                 //获取RSSI
@@ -349,6 +345,19 @@ public class MainActivity extends Activity {
                 key = getString(R.string.safeWarning);
             }
             time.setText(key + getString(R.string.countTime) + millisUntilFinished / 1000 + getString(R.string.second));
+            if (millisUntilFinished / 1000 == 9) {
+                mapManager = new BMapManager(MainActivity.this); // 开始获取定位信息定位
+                locationManager = mapManager
+                        .getLocationManager();
+                mapManager
+                        .init(getString(R.string.baiduKey),
+                                new MyMKGeneralListener());
+                locationManager.setNotifyInternal(20, 5);
+                locationManager
+                        .requestLocationUpdates(new MyLocationListener());
+
+                mapManager.start();
+            }
         }
     }
 
@@ -536,6 +545,56 @@ public class MainActivity extends Activity {
         mService = null;
         if (mapManager != null) {
             mapManager.destroy();
+        }
+    }
+
+    /**
+     * 移动网络开关
+     */
+    private void toggleMobileData(Context context, boolean enabled) {
+        ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkinfo = conMgr.getActiveNetworkInfo();
+        if (networkinfo != null) {
+            if (networkinfo.isConnected()) {
+                return;
+            }
+        }
+        Class<?> conMgrClass = null; // ConnectivityManager类
+        Field iConMgrField = null; // ConnectivityManager类中的字段
+        Object iConMgr = null; // IConnectivityManager类的引用
+        Class<?> iConMgrClass = null; // IConnectivityManager类
+        Method setMobileDataEnabledMethod = null; // setMobileDataEnabled方法
+        try {
+            // 取得ConnectivityManager类
+            conMgrClass = Class.forName(conMgr.getClass().getName());
+            // 取得ConnectivityManager类中的对象mService
+            iConMgrField = conMgrClass.getDeclaredField("mService");
+            // 设置mService可访问
+            iConMgrField.setAccessible(true);
+            // 取得mService的实例化类IConnectivityManager
+            iConMgr = iConMgrField.get(conMgr);
+            // 取得IConnectivityManager类
+            iConMgrClass = Class.forName(iConMgr.getClass().getName());
+            // 取得IConnectivityManager类中的setMobileDataEnabled(boolean)方法
+            setMobileDataEnabledMethod = iConMgrClass.getDeclaredMethod("setMobileDataEnabled", Boolean.TYPE);
+            // 设置setMobileDataEnabled方法可访问
+            setMobileDataEnabledMethod.setAccessible(true);
+            // 调用setMobileDataEnabled方法
+            setMobileDataEnabledMethod.invoke(iConMgr, enabled);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 }
