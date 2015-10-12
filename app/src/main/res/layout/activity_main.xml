@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@mipmap/batteryfull"
                 android:gravity="center"
-                android:text="@string/battery"
+                android:text="@string/fullBattery"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 

@@ -248,6 +248,7 @@ public class MainActivity extends Activity {
                 tv_bluetooth_name.setText(getString(R.string.bluetooth_name) + mDevice.getName());
                 mState = UART_PROFILE_CONNECTED;
                 tv_rssi.setText(getString(R.string.rssi) + rssi + "dBm");
+                tv_battery.setText(getString(R.string.fullBattery));
             }
             /**
              * 连接断开

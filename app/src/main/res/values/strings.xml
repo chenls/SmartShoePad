@@ -63,6 +63,7 @@
     <string name="setting">设置</string>
     <string name="bluetooth_name">" 设备："</string>
     <string name="battery">" 电量：空"</string>
+    <string name="fullBattery">" 电量：100%"</string>
     <string name="battery_value">" 电量："</string>
     <string name="rssi">" Rssi："</string>
     <string name="rssi_null">" Rssi：空"</string>
