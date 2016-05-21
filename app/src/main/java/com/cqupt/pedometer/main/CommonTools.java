@@ -1,4 +1,4 @@
-package com.chenls.smartshoepad.main;
+package com.cqupt.pedometer.main;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chenls.smartshoepad.R;
+import com.cqupt.pedometer.R;
 
 public class CommonTools {
 

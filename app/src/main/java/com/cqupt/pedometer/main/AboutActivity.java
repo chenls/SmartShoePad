@@ -1,4 +1,4 @@
-package com.chenls.smartshoepad.main;
+package com.cqupt.pedometer.main;
 
 import android.app.Activity;
 import android.os.Build;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.chenls.smartshoepad.R;
+import com.cqupt.pedometer.R;
 
 public class AboutActivity extends Activity {
 

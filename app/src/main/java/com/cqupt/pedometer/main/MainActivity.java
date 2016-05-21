@@ -1,4 +1,4 @@
-package com.chenls.smartshoepad.main;
+package com.cqupt.pedometer.main;
 
 import android.app.Activity;
 import android.app.Service;
@@ -48,10 +48,10 @@ import com.baidu.mapapi.MKSearchListener;
 import com.baidu.mapapi.MKSuggestionResult;
 import com.baidu.mapapi.MKTransitRouteResult;
 import com.baidu.mapapi.MKWalkingRouteResult;
-import com.chenls.smartshoepad.R;
-import com.chenls.smartshoepad.setting.Choose;
-import com.chenls.smartshoepad.setting.Input;
-import com.chenls.smartshoepad.welcome.SetActivity;
+import com.cqupt.pedometer.R;
+import com.cqupt.pedometer.setting.Choose;
+import com.cqupt.pedometer.setting.Input;
+import com.cqupt.pedometer.welcome.SetActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;

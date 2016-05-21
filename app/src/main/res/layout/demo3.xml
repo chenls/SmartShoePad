@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/png3">
+        android:background="@mipmap/png2">
 
         <LinearLayout
             android:id="@+id/viewGroup"

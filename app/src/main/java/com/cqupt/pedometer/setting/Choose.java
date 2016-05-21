@@ -1,4 +1,4 @@
-package com.chenls.smartshoepad.setting;
+package com.cqupt.pedometer.setting;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,10 +11,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.chenls.smartshoepad.R;
-import com.chenls.smartshoepad.main.SettingActivity;
-import com.chenls.smartshoepad.main.WarningSetActivity;
-import com.chenls.smartshoepad.welcome.SetActivity;
+import com.cqupt.pedometer.R;
+import com.cqupt.pedometer.main.SettingActivity;
+import com.cqupt.pedometer.main.WarningSetActivity;
+import com.cqupt.pedometer.welcome.SetActivity;
 
 public class Choose extends Activity {
     public static final String CHOOSE_RESULT = "result";

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_black"
-    tools:context="com.chenls.smartshoepad.main.AboutActivity">
+    tools:context="com.cqupt.pedometer.main.AboutActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

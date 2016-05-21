@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.chenls.smartshoepad.main;
+package com.cqupt.pedometer.main;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;

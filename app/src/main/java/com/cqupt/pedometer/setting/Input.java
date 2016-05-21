@@ -1,4 +1,4 @@
-package com.chenls.smartshoepad.setting;
+package com.cqupt.pedometer.setting;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,10 +13,10 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.chenls.smartshoepad.R;
-import com.chenls.smartshoepad.main.CommonTools;
-import com.chenls.smartshoepad.main.WarningSetActivity;
-import com.chenls.smartshoepad.welcome.SetActivity;
+import com.cqupt.pedometer.R;
+import com.cqupt.pedometer.main.CommonTools;
+import com.cqupt.pedometer.main.WarningSetActivity;
+import com.cqupt.pedometer.welcome.SetActivity;
 
 public class Input extends Activity {
     public static final String MY_DATA = "myDate";

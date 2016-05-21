@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SmartShoePad-d2779c725084471e69d517b14116c47d3534718b.iml" filepath="$PROJECT_DIR$/SmartShoePad-d2779c725084471e69d517b14116c47d3534718b.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Pedometer.iml" filepath="$PROJECT_DIR$/Pedometer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

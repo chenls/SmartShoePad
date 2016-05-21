@@ -1,4 +1,4 @@
-package com.chenls.smartshoepad.welcome;
+package com.cqupt.pedometer.welcome;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,9 +11,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.chenls.smartshoepad.R;
-import com.chenls.smartshoepad.setting.Choose;
-import com.chenls.smartshoepad.setting.Input;
+import com.cqupt.pedometer.R;
+import com.cqupt.pedometer.setting.Choose;
+import com.cqupt.pedometer.setting.Input;
 
 public class SetActivity extends Activity {
     private static final int REQUEST_SET_GENDER = 1;

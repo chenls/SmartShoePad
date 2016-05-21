@@ -1,4 +1,4 @@
-package com.chenls.smartshoepad.welcome;
+package com.cqupt.pedometer.welcome;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,9 +18,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.chenls.smartshoepad.R;
-import com.chenls.smartshoepad.main.WelcomeActivity;
-import com.chenls.smartshoepad.setting.Input;
+import com.cqupt.pedometer.R;
+import com.cqupt.pedometer.main.WelcomeActivity;
+import com.cqupt.pedometer.setting.Input;
 
 import java.util.ArrayList;
 

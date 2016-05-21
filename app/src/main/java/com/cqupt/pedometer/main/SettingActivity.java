@@ -1,4 +1,4 @@
-package com.chenls.smartshoepad.main;
+package com.cqupt.pedometer.main;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,10 +12,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.chenls.smartshoepad.R;
-import com.chenls.smartshoepad.setting.Choose;
-import com.chenls.smartshoepad.setting.Input;
-import com.chenls.smartshoepad.welcome.SetActivity;
+import com.cqupt.pedometer.R;
+import com.cqupt.pedometer.setting.Choose;
+import com.cqupt.pedometer.setting.Input;
+import com.cqupt.pedometer.welcome.SetActivity;
 
 public class SettingActivity extends Activity {
     private static final int REQUEST_AUTO_CONNECT = 2;

@@ -1,4 +1,4 @@
-package com.chenls.smartshoepad.main;
+package com.cqupt.pedometer.main;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -18,10 +18,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.chenls.smartshoepad.R;
-import com.chenls.smartshoepad.setting.Choose;
-import com.chenls.smartshoepad.setting.Input;
-import com.chenls.smartshoepad.welcome.SetActivity;
+import com.cqupt.pedometer.R;
+import com.cqupt.pedometer.setting.Choose;
+import com.cqupt.pedometer.setting.Input;
+import com.cqupt.pedometer.welcome.SetActivity;
 
 public class WelcomeActivity extends Activity {
     private static final String TAG = "SmartLock";

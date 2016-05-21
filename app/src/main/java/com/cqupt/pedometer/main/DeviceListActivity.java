@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.chenls.smartshoepad.main;
+package com.cqupt.pedometer.main;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -45,9 +45,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.chenls.smartshoepad.R;
-import com.chenls.smartshoepad.setting.Choose;
-import com.chenls.smartshoepad.setting.Input;
+import com.cqupt.pedometer.R;
+import com.cqupt.pedometer.setting.Choose;
+import com.cqupt.pedometer.setting.Input;
 
 import java.util.ArrayList;
 import java.util.HashMap;
